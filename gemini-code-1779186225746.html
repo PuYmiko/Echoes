@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echoes | Premium Gallery Editorial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Courier+Prime&family=Noto+Serif+SC:wght@200;300&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Cormorant Garamond', 'Noto Serif SC', serif;
+            background-color: #f2f5f1;
+            overflow-x: hidden;
+            color: #1e2921;
+        }
+
+        .paper-texture {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E"),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(242, 245, 241, 0) 100%);
+            pointer-events: none;
+            z-index: 99;
+        }
+
+        .blur-title {
+            font-weight: 300;
+            letter-spacing: 0.7em;
+            color: rgba(30, 41, 33, 0.9);
+            font-size: 2.25rem;
+            text-transform: uppercase;
+            will-change: transform, filter, opacity;
+        }
+
+        @media (min-width: 768px) {
+            .blur-title {
+                font-size: 3.5rem;
+            }
+        }
+
+        .scraps {
+            position: absolute;
+            width: var(--w);
+            height: var(--h);
+            left: 0;
+            top: 0;
+            pointer-events: auto;
+            will-change: transform, opacity;
+            box-shadow: 1px 3px 12px rgba(30, 41, 33, 0.05), 0px 1px 2px rgba(0, 0, 0, 0.02);
+            border-radius: 1px;
+            transition: box-shadow 0.5s ease;
+        }
+
+        .scraps.has-image {
+            cursor: pointer;
+        }
+
+        .typewriter {
+            font-family: 'Courier Prime', monospace;
+        }
+
+        .envelope-container {
+            position: relative;
+            width: 290px;
+            height: 190px;
+            background: #cbd3cb;
+            box-shadow: inset 0 0 20px rgba(30, 41, 33, 0.05), 0 12px 35px rgba(30, 41, 33, 0.08);
+            border-radius: 2px;
+        }
+
+        .envelope-front {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 115px;
+            background: #dbe2db;
+            z-index: 15;
+            border-radius: 0 0 2px 2px;
+            box-shadow: 0 -3px 12px rgba(30, 41, 33, 0.03);
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .letter-paper {
+            position: absolute;
+            bottom: 10px;
+            left: 5%;
+            width: 90%;
+            height: 320px;
+            background: #fdfdfc;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            padding: 24px 20px;
+            will-change: transform;
+        }
+
+        #detailPage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f2f5f1;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            will-change: opacity;
+        }
+    </style>
+</head>
+
+<body class="antialiased select-none">
+
+    <div class="paper-texture"></div>
+
+    <div id="mainWrapper" class="origin-center will-change-transform">
+        <div id="hero" class="relative w-full h-screen flex items-center justify-center overflow-hidden z-10">
+            <h1 id="mainTitle" class="blur-title select-none z-10">Echoes</h1>
+            <div id="scraps-container" class="absolute inset-0 w-full h-full z-0"></div>
+        </div>
+
+        <section id="scrollSection" class="relative min-h-screen z-30 flex items-center justify-center overflow-hidden">
+            <div class="envelope-container flex justify-center">
+                <div id="letterPaper" class="letter-paper flex flex-col justify-between text-[#1e2921]">
+                    <div class="space-y-4">
+                        <div class="border-b border-[#1e2921]/10 pb-2 flex justify-between items-baseline">
+                            <span class="typewriter text-[8px] tracking-widest opacity-40">EDITORIAL ARCHIVE</span>
+                            <span class="text-[9px] font-light opacity-40">VOL. 01</span>
+                        </div>
+                        <h3 class="text-sm font-normal tracking-widest text-[#1e2921]/80 font-sans">自然、回响与光的留白</h3>
+                        <p
+                            class="text-[11px] font-light leading-relaxed opacity-75 text-justify tracking-wide font-sans">
+                            “当微风穿过无声的森林，树影在焦距之外散落。点击任意一帧快门碎片，捕获风的低语、石的记忆，以及草木深处的清爽回声。”
+                        </p>
+                    </div>
+                    <div
+                        class="text-center italic text-[9px] tracking-widest opacity-30 border-t border-[#1e2921]/5 pt-2">
+                        - Echoes Static Edition -
+                    </div>
+                </div>
+                <div class="envelope-front"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="detailPage">
+        <div id="detailContent"
+            class="max-w-4xl w-[90%] md:w-[80%] flex flex-col md:flex-row items-center gap-8 md:gap-16 p-4">
+            <div class="w-full md:w-[55%] flex justify-center md:justify-end">
+                <img id="detailImg" src="" alt="Detail"
+                    class="max-h-[75vh] object-contain shadow-[0_20px_50px_rgba(30,41,33,0.1)] border border-white/30">
+            </div>
+            <div class="w-full md:w-[40%] text-[#1e2921] space-y-6 font-sans">
+                <div id="aiTextContainer" class="space-y-3">
+                </div>
+                <div class="pt-4 border-t border-[#1e2921]/10 w-32">
+                    <span class="text-[11px] tracking-[0.2em] uppercase opacity-40 font-mono block">
+                        • Nature Echoes
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        const container = document.getElementById('scraps-container');
+        const mainTitle = document.getElementById('mainTitle');
+        const totalObjects = 38;
+        let objects = [];
+
+        // 🌟 1. 27张照片的完整本地路径库
+        const myImages = [
+            "images/pic1.jpg", "images/pic2.jpg", "images/pic3.jpg", "images/pic4.jpg", "images/pic5.jpg",
+            "images/pic6.jpg", "images/pic7.jpg", "images/pic8.jpg", "images/pic9.jpg", "images/pic10.jpg",
+            "images/pic11.jpg", "images/pic12.jpg", "images/pic13.jpg", "images/pic14.jpg", "images/pic15.jpg",
+            "images/pic16.jpg", "images/pic17.jpg", "images/pic18.jpg", "images/pic19.jpg", "images/pic20.jpg",
+            "images/pic21.jpg", "images/pic22.jpg", "images/pic23.jpg", "images/pic24.jpg", "images/pic25.jpg",
+            "images/pic26.jpg", "images/pic27.jpg"
+        ];
+
+        // 🌟 2. 精准对应你 27 张图特征的静态高质量、现代清爽风文案
+        const staticCaptions = [
+            { title: "树影 • 🍃", desc: "阳光穿透中式旧檐，白墙上便有了斑驳的诗。静等风来。" },
+            { title: "慵懒 • 🐈", desc: "木台之上的白色流光。日光不语，猫咪亦好眠。" },
+            { title: "枕水 • 🌊", desc: "古砖与乱石清流的交错，那是岁月洗涤后的沉静色泽。" },
+            { title: "盛放 • 🌸", desc: "白墙黛瓦关不住的，是满墙蔷薇溢出的暮春私语。" },
+            { title: "向云 • 🪵", desc: "长长木栈道通往天际。每一步，都是向着风的朝圣。" },
+            { title: "高阁 • 🏮", desc: "登高凭栏，层叠的吊脚楼错落，藏着流传千年的生机。" },
+            { title: "池畔 • ✨", desc: "古迹清泉映照银饰的清冽。眉眼盈盈，万物皆温柔。" },
+            { title: "苔痕 • 🌱", desc: "山岩缝隙间的一抹浓翠。微光过处，生命自顾生发。" },
+            { title: "银饰 • ✨", desc: "苗银的碎光落满肩头，在古旧木楼的光影里，做一日盛装的山涧少女。" },
+            { title: "向野 • 🌿", desc: "岩壁为框，天光为幕。张开双臂，接住山野吹向我的风。" },
+            { title: "洞天 • 🌫️", desc: "洞穴框住的绿意与崖壁。微光漫过，是自然晕染的水墨画。" },
+            { title: "湖夜 • 🌃", desc: "城市灯火揉碎在湖面，亭台剪影里，藏着晚风的温柔倒影。" },
+            { title: "清溪 • 💧", desc: "林涧的溪水漫过石苔，光影在水面晃荡，是夏日最清凉的注脚。" },
+            { title: "琼花 • 🌸", desc: "白墙黛瓦探出的雪球，是春天藏在园林里的温柔絮语。" },
+            { title: "苔泉 • 🌊", desc: "青苔覆石，流水漾光。山涧的清冽，都凝在这一汪碎影里。" },
+            { title: "飞旋 • 🎢", desc: "林间的空中轨道，载着半空中的笑声，在树影里慢慢兜转。" },
+            { title: "闲庭 • 🌿", desc: "旧墙爬满藤蔓，长椅静立花间，时光在这里慢了下来。" },
+            { title: "晴叶 • ☀️", desc: "阳光穿过层层绿意，把春天揉进透亮的光斑里。" },
+            { title: "幽潭 • 💧", desc: "山林深处的一汪碧水，藏着未经打扰的清透与温柔。" },
+            { title: "苔谷 • 🌲", desc: "青苔覆满岩壁，光影在石缝间流淌，是大自然的静谧剧场。" },
+            { title: "蔷薇 • 🌸", desc: "满墙粉霞倾泻而下，把春天的浪漫开到了极致。" },
+            { title: "古楼 • 🏯", desc: "雕梁画栋的土司戏楼，沉淀着百年时光的厚重与故事。" },
+            { title: "蝶影 • 🦋", desc: "黑蝶停驻花间，翅膀掠过春光，是山野最灵动的诗。" },
+            { title: "窥见 • 🌫️", desc: "洞口框住天光与林海，一步踏入，便闯入了绿野仙踪。" },
+            { title: "洞天 • 🌑", desc: "巨大的天然石穴框住天地，光影里的人影成了山野的注脚。" },
+            { title: "深谷 • 🌿", desc: "绿意铺满谷底，石峰与草木相拥，是藏在群山里的秘境。" },
+            { title: "星夜 • ☕", desc: "夜色里的蓝调小店亮起暖光，一杯咖啡，接住城市的晚风。" },
+        ];
+
+        function initGallery() {
+            container.innerHTML = "";
+            objects = [];
+
+            const count = totalObjects;
+            const cx = window.innerWidth / 2;
+            const cy = window.innerHeight / 2;
+
+            for (let i = 0; i < count; i++) {
+                const el = document.createElement('div');
+
+                const w = Math.floor(Math.random() * 25) + 70;
+                const h = Math.floor(Math.random() * 25) + 65;
+                el.style.setProperty('--w', `${w}px`);
+                el.style.setProperty('--h', `${h}px`);
+
+                el.className = `scraps bg-[#fcfdfa] p-1 pb-3 flex flex-col has-image`;
+                const baseRot = Math.random() * 12 - 6;
+
+                const imgIndex = i % myImages.length;
+                const imgSrc = myImages[imgIndex];
+
+                const innerImg = document.createElement('div');
+                innerImg.className = 'w-full h-full bg-cover bg-center filter saturate-90 contrast-100';
+                innerImg.style.backgroundImage = `url('${imgSrc}')`;
+                el.appendChild(innerImg);
+
+                // 点击时直接读取本地数组，不再经过任何网络 fetch，杜绝卡死
+                el.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openDetailStatic(imgSrc, imgIndex);
+                });
+
+                container.appendChild(el);
+
+                const innerRadius = Math.max(w, h) * 1.5 + (Math.random() * 40);
+                const angle = (i / count) * Math.PI * 2 + (Math.random() * 0.3);
+                const closeX = cx + Math.cos(angle) * (innerRadius + 40);
+                const closeY = cy + Math.sin(angle) * innerRadius;
+
+                const outerRadius = Math.min(window.innerWidth, window.innerHeight) * 0.38 + (Math.random() * 120);
+                let openX = cx + Math.cos(angle) * outerRadius - w / 2;
+                let openY = cy + Math.sin(angle) * outerRadius - h / 2;
+
+                const padding = 15;
+                openX = Math.max(padding, Math.min(window.innerWidth - w - padding, openX));
+                openY = Math.max(padding, Math.min(window.innerHeight - h - padding, openY));
+
+                gsap.set(el, { x: closeX - w / 2, y: closeY - h / 2, rotation: baseRot });
+
+                objects.push({
+                    element: el, w: w, h: h,
+                    closeX: closeX - w / 2, closeY: closeY - h / 2,
+                    openX: openX, openY: openY,
+                    baseRot: baseRot, seed: Math.random() * 50
+                });
+            }
+        }
+
+        initGallery();
+
+        // 🌟 3. 完全无卡顿的本地弹窗切换渲染函数
+        const detailPage = document.getElementById('detailPage');
+        const detailImg = document.getElementById('detailImg');
+        const mainWrapper = document.getElementById('mainWrapper');
+        const aiTextContainer = document.getElementById('aiTextContainer');
+
+        function openDetailStatic(imgUrl, imgIndex) {
+            isDetailOpen = true;
+            detailImg.src = imgUrl;
+
+            // 获取对应的静态高质感文案
+            const data = staticCaptions[imgIndex] || { title: "留白 • 🌿", desc: "风停在这一帧。" };
+
+            // 瞬间注入 HTML 文案
+            aiTextContainer.innerHTML = `
+                <p class="text-[15px] font-medium tracking-widest text-[#2e3d32] mb-1">${data.title}</p>
+                <p class="text-[13px] opacity-75 leading-relaxed font-light tracking-wide">${data.desc}</p>
+            `;
+
+            // 执行缩放、模糊和淡入的丝滑 GSAP 组合动画
+            gsap.to(mainWrapper, { scale: 0.96, filter: "blur(8px)", opacity: 0.3, duration: 0.6, ease: "power2.out" });
+            gsap.to(detailPage, { opacity: 1, pointerEvents: "auto", duration: 0.5, ease: "power2.out" });
+            gsap.fromTo("#detailContent", { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" });
+        }
+
+        // --- 核心物理/呼吸动效逻辑 ---
+        let tick = 0; let mouseMoved = false; let isDetailOpen = false;
+        function animateIdle() {
+            if (!mouseMoved && !isDetailOpen) {
+                tick += 0.005;
+                objects.forEach(obj => {
+                    const idleX = Math.sin(tick + obj.seed) * 4; const idleY = Math.cos(tick + obj.seed) * 4;
+                    gsap.set(obj.element, { x: obj.closeX + idleX, y: obj.closeY + idleY, rotation: obj.baseRot + Math.sin(tick) * 0.5 });
+                });
+            }
+            requestAnimationFrame(animateIdle);
+        }
+        requestAnimationFrame(animateIdle);
+
+        window.addEventListener('mousemove', (e) => {
+            if (isDetailOpen) return; mouseMoved = true;
+            const cx = window.innerWidth / 2; const cy = window.innerHeight / 2;
+            const distToCenter = Math.hypot(e.clientX - cx, e.clientY - cy);
+            const maxTrack = Math.min(window.innerWidth, window.innerHeight) * 0.45;
+            let progress = Math.min(distToCenter / maxTrack, 1);
+            progress = gsap.utils.pipe(gsap.utils.clamp(0, 1), gsap.parseEase("power1.out"))(progress);
+
+            gsap.to(mainTitle, { scale: 0.9 + (progress * 0.25), filter: `blur(${progress * 2.5}px)`, opacity: 1 - (progress * 0.25), duration: 0.7, ease: "power2.out", overwrite: "auto" });
+
+            objects.forEach(obj => {
+                const targetX = gsap.utils.interpolate(obj.closeX, obj.openX, progress);
+                const targetY = gsap.utils.interpolate(obj.closeY, obj.openY, progress);
+                const currentShadow = progress * 4;
+                gsap.to(obj.element, {
+                    x: targetX, y: targetY, rotation: obj.baseRot + (progress * (obj.baseRot * 1.5)),
+                    boxShadow: `${1 + currentShadow}px ${3 + currentShadow}px ${10 + currentShadow * 2}px rgba(30, 41, 33, ${0.05 - progress * 0.02})`,
+                    duration: 1.5, ease: "power3.out", overwrite: "auto"
+                });
+            });
+        });
+
+        gsap.to("#letterPaper", { scrollTrigger: { trigger: "#scrollSection", start: "top bottom", end: "bottom bottom", scrub: 1 }, y: -145, ease: "power1.inOut" });
+
+        // 点击空白处关闭弹窗
+        detailPage.addEventListener('click', (e) => {
+            if (e.target.closest('#detailImg') || e.target.closest('.pt-4')) return;
+            gsap.to(detailPage, {
+                opacity: 0, pointerEvents: "none", duration: 0.4, ease: "power2.inOut",
+                onComplete: () => { isDetailOpen = false; mouseMoved = false; }
+            });
+            gsap.to(mainWrapper, { scale: 1, filter: "blur(0px)", opacity: 1, duration: 0.5, ease: "power2.out" });
+        });
+
+        window.addEventListener('resize', () => { initGallery(); });
+    </script>
+</body>
+
+</html>
