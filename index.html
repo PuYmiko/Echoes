@@ -185,17 +185,16 @@
         const totalObjects = 38;
         let objects = [];
 
-        // 🌟 1. 27张照片的完整本地路径库
+        // 🌟 路径已更新：图片直接存放在同级根目录下，去掉了所有的文件夹前缀
         const myImages = [
-            "images/pic1.jpg", "images/pic2.jpg", "images/pic3.jpg", "images/pic4.jpg", "images/pic5.jpg",
-            "images/pic6.jpg", "images/pic7.jpg", "images/pic8.jpg", "images/pic9.jpg", "images/pic10.jpg",
-            "images/pic11.jpg", "images/pic12.jpg", "images/pic13.jpg", "images/pic14.jpg", "images/pic15.jpg",
-            "images/pic16.jpg", "images/pic17.jpg", "images/pic18.jpg", "images/pic19.jpg", "images/pic20.jpg",
-            "images/pic21.jpg", "images/pic22.jpg", "images/pic23.jpg", "images/pic24.jpg", "images/pic25.jpg",
-            "images/pic26.jpg", "images/pic27.jpg"
+            "pic1.webp", "pic2.webp", "pic3.webp", "pic4.webp", "pic5.webp",
+            "pic6.webp", "pic7.webp", "pic8.webp", "pic9.webp", "pic10.webp",
+            "pic11.webp", "pic12.webp", "pic13.webp", "pic14.webp", "pic15.webp",
+            "pic16.webp", "pic17.webp", "pic18.webp", "pic19.webp", "pic20.webp",
+            "pic21.webp", "pic22.webp", "pic23.webp", "pic24.webp", "pic25.webp",
+            "pic26.webp", "pic27.webp"
         ];
 
-        // 🌟 2. 精准对应你 27 张图特征的静态高质量、现代清爽风文案
         const staticCaptions = [
             { title: "树影 • 🍃", desc: "阳光穿透中式旧檐，白墙上便有了斑驳的诗。静等风来。" },
             { title: "慵懒 • 🐈", desc: "木台之上的白色流光。日光不语，猫咪亦好眠。" },
@@ -253,7 +252,6 @@
                 innerImg.style.backgroundImage = `url('${imgSrc}')`;
                 el.appendChild(innerImg);
 
-                // 点击时直接读取本地数组，不再经过任何网络 fetch，杜绝卡死
                 el.addEventListener('click', (e) => {
                     e.stopPropagation();
                     openDetailStatic(imgSrc, imgIndex);
@@ -287,7 +285,6 @@
 
         initGallery();
 
-        // 🌟 3. 完全无卡顿的本地弹窗切换渲染函数
         const detailPage = document.getElementById('detailPage');
         const detailImg = document.getElementById('detailImg');
         const mainWrapper = document.getElementById('mainWrapper');
@@ -297,16 +294,13 @@
             isDetailOpen = true;
             detailImg.src = imgUrl;
 
-            // 获取对应的静态高质感文案
             const data = staticCaptions[imgIndex] || { title: "留白 • 🌿", desc: "风停在这一帧。" };
 
-            // 瞬间注入 HTML 文案
             aiTextContainer.innerHTML = `
                 <p class="text-[15px] font-medium tracking-widest text-[#2e3d32] mb-1">${data.title}</p>
                 <p class="text-[13px] opacity-75 leading-relaxed font-light tracking-wide">${data.desc}</p>
             `;
 
-            // 执行缩放、模糊和淡入的丝滑 GSAP 组合动画
             gsap.to(mainWrapper, { scale: 0.96, filter: "blur(8px)", opacity: 0.3, duration: 0.6, ease: "power2.out" });
             gsap.to(detailPage, { opacity: 1, pointerEvents: "auto", duration: 0.5, ease: "power2.out" });
             gsap.fromTo("#detailContent", { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" });
@@ -350,7 +344,6 @@
 
         gsap.to("#letterPaper", { scrollTrigger: { trigger: "#scrollSection", start: "top bottom", end: "bottom bottom", scrub: 1 }, y: -145, ease: "power1.inOut" });
 
-        // 点击空白处关闭弹窗
         detailPage.addEventListener('click', (e) => {
             if (e.target.closest('#detailImg') || e.target.closest('.pt-4')) return;
             gsap.to(detailPage, {
