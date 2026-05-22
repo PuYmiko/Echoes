@@ -247,9 +247,11 @@
                 const imgIndex = i % myImages.length;
                 const imgSrc = myImages[imgIndex];
 
-                const innerImg = document.createElement('div');
-                innerImg.className = 'w-full h-full bg-cover bg-center filter saturate-90 contrast-100';
-                innerImg.style.backgroundImage = `url('${imgSrc}')`;
+                const innerImg = document.createElement('img');
+                innerImg.src = imgSrc;
+                innerImg.loading = 'lazy';
+                innerImg.decoding = 'async';
+                innerImg.className = 'w-full h-full object-cover filter saturate-90 contrast-100';
                 el.appendChild(innerImg);
 
                 el.addEventListener('click', (e) => {
